@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:custom_view/custom.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(MaterialApp(
@@ -20,7 +23,26 @@ class _HomeState extends State<Home> {
     final form = _key.currentState;
     if (form.validate()) {
       form.save();
-      print('$nama, $email, $phone, $company');
+      _submit();
+    }
+  }
+
+  _submit() async {
+    final reponse = await http.post(
+        "https://whitaaplikasi.com/demo/api/addAccountMembers.php",
+        body: {
+          "nama": nama,
+          "email": email,
+          "phone": phone,
+          "company": company
+        });
+
+    final data = jsonDecode(reponse.body);
+    int value = data['value'];
+    if (value == 1) {
+      print('Data Berhasil');
+    } else {
+      print('Data gagal');
     }
   }
 
